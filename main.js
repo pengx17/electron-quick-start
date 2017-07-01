@@ -7,20 +7,56 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
+const { spawn } = require('child_process');
+const Axios = require('axios');
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow () {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+async function spawnDjango () {
+  return new Promise(resolve => {
+    const django = spawn('./runserver.sh', [], { cwd: '/Users/pengxiao/branches/rubick' });
+    django.stdout.on('data', (data) => { console.log(`std: ${data}`); });
+    django.stderr.on('data', (data) => { console.error(`std: ${data}`); });
 
-  // and load the index.html of the app.
+    checkServerAliveAndResolve(resolve);
+  })
+}
+
+function checkServerAliveAndResolve(resolve) {
+  console.log('ping');
+  Axios.get('http://localhost:5080/_ping')
+    .then(() => resolve())
+    .catch(rej => {
+      console.log(rej.message);
+      setTimeout(() => {
+        checkServerAliveAndResolve(resolve)
+      }, 100);
+    });
+}
+
+async function createWindow () {
+  // Create the browser window.
+  mainWindow = new BrowserWindow({
+    vibrancy: 'ultra-dark',
+    center: true,
+    width: 1200,
+    height: 800,
+    minWidth: 1000,
+    minHeight: 600
+  })
+
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
     protocol: 'file:',
     slashes: true
   }))
+
+  await spawnDjango();
+
+  // and load the index.html of the app.
+  mainWindow.loadURL('http://localhost:5080/landing')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()

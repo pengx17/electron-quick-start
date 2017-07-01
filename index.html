@@ -2,18 +2,34 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>LOADING ...</title>
+     <style>
+    /* Following is inlined since we don't want to let the user see layout reflow issues */
+    html {
+      font-size: 14px;
+      height: 100%;
+    }
+    body.login-body {
+      box-sizing: border-box;
+      display: flex;
+      flex-flow: column;
+      min-height: 100%;
+      justify-content: center;
+      padding: 30px;
+      margin: 0;
+      color: #494949;
+      font-family: HelveticaNeue-Light, Helvetica Neue, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", sans-serif;
+      font-weight: 400;
+      background-color: #f1f1f1;
+    }
+    body.login-body {
+      align-self: center;
+    }
+  </style>
   </head>
-  <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+  <body class="login-body">
+    <span style="font-size: 24px; text-align: center;">
+      载入中， 请稍后 ...
+    </span>
   </body>
-
-  <script>
-    // You can also require other files to run in this process
-    require('./renderer.js')
-  </script>
 </html>
